@@ -7,6 +7,7 @@ import 'package:myapp/components/my_heat_map.dart';
 import 'package:myapp/database/habit_database.dart';
 import 'package:myapp/models/habit.dart';
 import 'package:myapp/util/habit_util.dart';
+import 'package:myapp/util/sharepref.dart';
 import 'package:provider/provider.dart';
 
 
@@ -24,7 +25,15 @@ class _HomePageState extends State<HomePage>{
     //read existing happens on app start
     Provider.of<HabitDatabase>(context, listen:false).readHabits();
 
+    kms();
+
     super.initState();
+  }
+
+  Future kms() async {
+    bool temp = await getSharedPreferencesBool('test');
+    print('>>>>$temp');
+    await setSharedPreferencesBool('test', true);
   }
 
   //text controller

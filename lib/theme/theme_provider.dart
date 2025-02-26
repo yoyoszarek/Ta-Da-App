@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
-import 'dark_mode.dart';
-import 'light_mode.dart';
+import 'package:myapp/util/sharepref.dart';
 
-class ThemeProvider extends ChangeNotifier{
-  //initally, lightmode
-  ThemeData  _themeData = lightMode;
+class ThemeProvider extends ChangeNotifier {
+  ThemeData _themeData = ThemeData.light();
+  bool _isDarkMode = false;
 
-  //get current theme
+  ThemeProvider() {
+    _loadTheme(); // Load theme preference on initialization
+  }
 
   ThemeData get themeData => _themeData;
+  bool get isDarkMode => _isDarkMode;
 
-  //is current theme dark mode
-
-  bool get isDarkMode => _themeData == darkMode;
-
-  //set Theme
-  set themeData(ThemeData themeData){
-    _themeData = themeData;
+  void _loadTheme() async {
+    _isDarkMode = await getSharedPreferencesBool('darkMode') ?? false;
+    _themeData = _isDarkMode ? ThemeData.dark() : ThemeData.light();
     notifyListeners();
   }
-  void toggleTheme(){
-    if (_themeData == lightMode){
-      themeData = darkMode;
-    } else{
-      themeData = lightMode;
-    }
+
+  void toggleTheme() async {
+    _isDarkMode = !_isDarkMode;
+    _themeData = _isDarkMode ? ThemeData.dark() : ThemeData.light();
+    await setSharedPreferencesBool('darkMode', _isDarkMode);
+    notifyListeners();
   }
 }
