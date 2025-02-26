@@ -175,7 +175,8 @@ class _HomePageState extends State<HomePage>{
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        title: Text('Ta-Da'),
+        backgroundColor: const Color.fromARGB(255, 148, 234, 130),
         foregroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       drawer: const MyDrawer(),
