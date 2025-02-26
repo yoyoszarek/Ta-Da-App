@@ -13,7 +13,7 @@ class ThemeProvider extends ChangeNotifier {
   bool get isDarkMode => _isDarkMode;
 
   void _loadTheme() async {
-    _isDarkMode = await getSharedPreferencesBool('darkMode') ?? false;
+    _isDarkMode = await getSharedPreferencesBool('darkMode');
     _themeData = _isDarkMode ? ThemeData.dark() : ThemeData.light();
     notifyListeners();
   }
