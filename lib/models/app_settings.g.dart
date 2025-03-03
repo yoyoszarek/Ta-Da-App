@@ -1,4 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// DO NOT TOUCH THIS !!!!
 
 part of 'app_settings.dart';
 
