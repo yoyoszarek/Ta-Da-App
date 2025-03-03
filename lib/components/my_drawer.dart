@@ -1,39 +1,67 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/pages/login_page.dart';
 import 'package:myapp/theme/theme_provider.dart';
-import 'package:myapp/util/sharepref.dart';
+import 'package:myapp/util/auth_util.dart';
 import 'package:provider/provider.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
 
-  Future<bool> getIsDarkMode() async {
-    return await getSharedPreferencesBool('darkMode');
+  void _logout(BuildContext context) async {
+    await AuthUtil.logout();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginPage()),
+      (Route<dynamic> route) => false,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    
     return Drawer(
-      backgroundColor: Theme.of(context).colorScheme.surface,
-      child: Center(
-        child: FutureBuilder<bool>(
-          future: getIsDarkMode(),
-          initialData: false, // Default value while loading
-          builder: (context, snapshot) {
+      child: Column(
+        children: [
+          // Drawer Header
+          DrawerHeader(
+            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+            child: const Center(
+              child: Text(
+                "Settings",
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+            ),
+          ),
 
-            if (snapshot.hasError) {
-              return const Text("Error loading theme");
-            }
+          // Toggle Dark Mode
+          SwitchListTile(
+            title: const Text("Dark Mode"),
+            value: themeProvider.isDarkMode,
+            onChanged: (bool value) {
+              themeProvider.toggleTheme();
+            },
+          ),
 
-            return CupertinoSwitch(
-              value: snapshot.data ?? false,
-              onChanged: (value) {
-                Provider.of<ThemeProvider>(context, listen: false)
-                    .toggleTheme();
-              },
-            );
-          },
-        ),
+          const Spacer(),
+
+          // Sign Out Button
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton.icon(
+              onPressed: () => _logout(context),
+              icon: const Icon(Icons.logout, color: Colors.white),
+              label: const Text("Sign Out"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                minimumSize: const Size(double.infinity, 50),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 20),
+        ],
       ),
     );
   }

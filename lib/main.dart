@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/database/habit_database.dart';
+import 'package:myapp/pages/home_page.dart';
 import 'package:myapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'pages/home_page.dart';
+import 'package:myapp/pages/login_page.dart';
+import 'package:myapp/util/auth_util.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
-  // Initialize database
   await HabitDatabase.initialize();
   await HabitDatabase().saveFirstLaunchDate();
 
-  // Initialize theme provider
   ThemeProvider themeProvider = ThemeProvider();
+  bool loggedIn = await AuthUtil.isLoggedIn();
 
   runApp(
     MultiProvider(
@@ -20,19 +20,20 @@ void main() async {
         ChangeNotifierProvider(create: (context) => HabitDatabase()),
         ChangeNotifierProvider(create: (context) => themeProvider),
       ],
-      child: const MyApp(),
+      child: MyApp(isLoggedIn: loggedIn),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isLoggedIn;
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const HomePage(),
+      home: isLoggedIn ? const HomePage() : const LoginPage(),
       theme: Provider.of<ThemeProvider>(context).themeData,
     );
   }
