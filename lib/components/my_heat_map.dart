@@ -19,7 +19,7 @@ class MyHeatMap extends StatelessWidget{
       datasets: datasets,
       colorMode: ColorMode.color,
       defaultColor: Theme.of(context).colorScheme.secondary,
-      textColor: Colors.white,
+      textColor: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.black,
       showColorTip: false,
       showText: true,
       scrollable: true,
